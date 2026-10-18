@@ -1,8 +1,15 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    <!-- PantryIQ Base Theme -->
     <style name="Base.Theme.PantryIQ" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/smoked_plum</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <item name="colorSecondary">@color/dragon_fruit</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <item name="android:colorBackground">@color/rice_paper</item>
+        <item name="colorSurface">@color/rice_paper</item>
+        <item name="colorOnSurface">@color/smoked_plum</item>
     </style>
 
     <style name="Theme.PantryIQ" parent="Base.Theme.PantryIQ" />

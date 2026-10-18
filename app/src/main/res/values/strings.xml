@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">PantryIQ</string>
+
+<string name="app_name">PantryIQ</string>
+<string name="subtitle">Your pantry, your possibilities.</string>
+<string name="pantry_heading">My Pantry</string>
+<string name="empty_pantry">Your pantry is empty. Add your first ingredient to get started.</string>
+<string name="add_ingredient">Add Ingredient</string>
+
 </resources>

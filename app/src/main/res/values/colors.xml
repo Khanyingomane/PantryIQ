@@ -2,4 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- PantryIQ Brand Palette -->
+    <color name="rice_paper">#FFF8F0</color>
+    <color name="smoked_plum">#59445F</color>
+    <color name="dragon_fruit">#F05283</color>
 </resources>
