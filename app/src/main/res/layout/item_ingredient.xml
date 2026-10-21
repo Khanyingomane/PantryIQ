@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One row in the pantry ingredient list. -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/clean_white">
+
+    <!-- Ingredient name. -->
+    <TextView
+        android:id="@+id/tvIngredientName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/electric_plum"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <!-- Available quantity and measurement unit. -->
+    <TextView
+        android:id="@+id/tvIngredientQuantity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:textColor="@color/electric_plum"
+        android:textSize="15sp" />
+
+    <!-- Optional expiry date, hidden when not provided. -->
+    <TextView
+        android:id="@+id/tvIngredientExpiry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/electric_plum"
+        android:textSize="13sp"
+        android:visibility="gone" />
+
+</LinearLayout>

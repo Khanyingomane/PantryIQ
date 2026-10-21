@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- PantryIQ Brand Palette -->
-    <color name="rice_paper">#FFF8F0</color>
-    <color name="smoked_plum">#59445F</color>
-    <color name="dragon_fruit">#F05283</color>
+    <!-- PantryIQ 2026 Colour Palette -->
+    <color name="warm_cream">#F8F7F2</color>
+    <color name="electric_plum">#352044</color>
+    <color name="vivid_pink">#FF4F87</color>
+    <color name="lime_pop">#B8F36B</color>
+    <color name="clean_white">#FFFFFF</color>
+
+    <!-- Compatibility with existing layouts and theme -->
+    <color name="rice_paper">#F8F7F2</color>
+    <color name="smoked_plum">#352044</color>
+    <color name="dragon_fruit">#FF4F87</color>
+
 </resources>

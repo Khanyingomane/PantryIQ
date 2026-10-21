@@ -1,9 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-<string name="app_name">PantryIQ</string>
-<string name="subtitle">Your pantry, your possibilities.</string>
-<string name="pantry_heading">My Pantry</string>
-<string name="empty_pantry">Your pantry is empty. Add your first ingredient to get started.</string>
-<string name="add_ingredient">Add Ingredient</string>
+    <string name="app_name">PantryIQ</string>
+    <string name="subtitle">Your pantry, your possibilities.</string>
+
+    <string name="hero_tagline">LESS WASTE. MORE POSSIBILITIES.</string>
+    <string name="hero_title">Make something good with what you have.</string>
+    <string name="hero_description">Keep track of your ingredients and discover what you can cook.</string>
+
+    <string name="pantry_heading">My Pantry</string>
+    <string name="ingredient_count_zero">0 ITEMS</string>
+
+    <string name="empty_pantry_title">Your pantry starts here</string>
+    <string name="empty_pantry">Add your first ingredient to start discovering what you can make.</string>
+
+    <string name="add_ingredient">Add Ingredient</string>
+    <string name="add_ingredient_title">Add Ingredient</string>
+    <string name="add_ingredient_description">Keep track of what you have in your pantry.</string>
+
+    <string name="ingredient_name_label">Ingredient name</string>
+    <string name="ingredient_name_hint">e.g. Rice</string>
+
+    <string name="ingredient_quantity_label">Quantity</string>
+    <string name="ingredient_quantity_hint">e.g. 2</string>
+
+    <string name="ingredient_unit_label">Unit</string>
+    <string name="ingredient_unit_hint">e.g. kg, g, ml or pieces</string>
+
+    <string name="ingredient_expiry_label">Expiry date (optional)</string>
+    <string name="ingredient_expiry_hint">YYYY-MM-DD</string>
+    <string name="ingredient_expiry_help">Leave blank if the expiry date is unknown.</string>
+
+    <string name="save_ingredient">Save Ingredient</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

@@ -1,16 +1,27 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- PantryIQ Base Theme -->
+
     <style name="Base.Theme.PantryIQ" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/smoked_plum</item>
-        <item name="colorOnPrimary">@color/white</item>
 
-        <item name="colorSecondary">@color/dragon_fruit</item>
-        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorPrimary">@color/electric_plum</item>
+        <item name="colorOnPrimary">@color/clean_white</item>
 
-        <item name="android:colorBackground">@color/rice_paper</item>
-        <item name="colorSurface">@color/rice_paper</item>
-        <item name="colorOnSurface">@color/smoked_plum</item>
+        <item name="colorSecondary">@color/vivid_pink</item>
+        <item name="colorOnSecondary">@color/electric_plum</item>
+
+        <item name="colorTertiary">@color/lime_pop</item>
+        <item name="colorOnTertiary">@color/electric_plum</item>
+
+        <item name="android:colorBackground">@color/warm_cream</item>
+        <item name="colorSurface">@color/clean_white</item>
+        <item name="colorOnSurface">@color/electric_plum</item>
+
+        <item name="android:statusBarColor">@color/warm_cream</item>
+        <item name="android:navigationBarColor">@color/warm_cream</item>
+        <item name="android:windowLightStatusBar">true</item>
+
+
     </style>
 
     <style name="Theme.PantryIQ" parent="Base.Theme.PantryIQ" />
+
 </resources>
