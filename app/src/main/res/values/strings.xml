@@ -36,5 +36,11 @@
 
     <string name="recipe_count">%1$d recipes available</string>
 
+    <string-array name="unit_preferences">
+    <item>Metric (g, kg, ml, l)</item>
+    <item>Kitchen (cups, tbsp, tsp)</item>
+    <item>Count(items, pieces)</item>
+</string-array>
+
 
 </resources>

@@ -42,13 +42,19 @@ public class MainActivity extends AppCompatActivity {
         tvIngredientCount = findViewById(R.id.tvIngredientCount);
         layoutEmptyPantry = findViewById(R.id.layoutEmptyPantry);
         listPantryIngredients = findViewById(R.id.listPantryIngredients);
-        Button btnAddIngredient = findViewById(R.id.btnAddIngredient);
+
+        Button btnAddIngredient =
+                findViewById(R.id.btnAddIngredient);
+        Button btnDiscoverRecipes =
+                findViewById(R.id.btnDiscoverRecipes);
+        Button btnOpenSettings =
+                findViewById(R.id.btnOpenSettings);
 
         // Prepare the database and ingredient collection.
         databaseHelper = new PantryDatabaseHelper(this);
         ingredients = new ArrayList<>();
 
-        // Connect the adapter to the list and its action callbacks.
+        // Connect the adapter and its action callbacks.
         ingredientAdapter = new IngredientAdapter(
                 this,
                 ingredients,
@@ -63,6 +69,24 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(
                     MainActivity.this,
                     AddIngredientActivity.class
+            );
+            startActivity(intent);
+        });
+
+        // Open the recipe suggestions screen.
+        btnDiscoverRecipes.setOnClickListener(view -> {
+            Intent intent = new Intent(
+                    MainActivity.this,
+                    RecipeSuggestionsActivity.class
+            );
+            startActivity(intent);
+        });
+
+        // Open the settings screen.
+        btnOpenSettings.setOnClickListener(view -> {
+            Intent intent = new Intent(
+                    MainActivity.this,
+                    SettingsActivity.class
             );
             startActivity(intent);
         });
@@ -90,8 +114,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Opens the ingredient form with the selected ingredient's ID.
-     * AddIngredientActivity must load that record for editing.
+     * Opens the ingredient form with the selected ingredient's ID
+     * so the existing record can be edited.
      */
     private void editIngredient(Ingredient ingredient) {
         Intent intent = new Intent(
@@ -104,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Requests confirmation before permanently deleting an ingredient.
+     * Requests confirmation before deleting an ingredient.
      */
     private void confirmDeleteIngredient(Ingredient ingredient) {
         new AlertDialog.Builder(this)
@@ -246,11 +270,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-
         // Release the database helper when the activity is destroyed.
         if (databaseHelper != null) {
             databaseHelper.close();
         }
+
+        super.onDestroy();
     }
 }
+

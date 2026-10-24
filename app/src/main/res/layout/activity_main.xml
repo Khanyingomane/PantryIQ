@@ -164,6 +164,18 @@
                 android:textAllCaps="false" />
 
 
+            <Button
+                android:id="@+id/btnOpenSettings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Settings"
+                android:textAllCaps="false"
+                android:backgroundTint="#352044"
+                android:textColor="#FFFFFF" />
+
+
+
         </LinearLayout>
     </ScrollView>
 
