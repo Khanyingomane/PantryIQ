@@ -8,7 +8,6 @@
     android:padding="16dp"
     android:background="@color/clean_white">
 
-    <!-- Ingredient name. -->
     <TextView
         android:id="@+id/tvIngredientName"
         android:layout_width="match_parent"
@@ -17,7 +16,6 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <!-- Available quantity and measurement unit. -->
     <TextView
         android:id="@+id/tvIngredientQuantity"
         android:layout_width="match_parent"
@@ -26,7 +24,6 @@
         android:textColor="@color/electric_plum"
         android:textSize="15sp" />
 
-    <!-- Optional expiry date, hidden when not provided. -->
     <TextView
         android:id="@+id/tvIngredientExpiry"
         android:layout_width="match_parent"
@@ -35,5 +32,32 @@
         android:textColor="@color/electric_plum"
         android:textSize="13sp"
         android:visibility="gone" />
+
+    <!-- Edit and delete controls. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_marginTop="10dp">
+
+        <Button
+            android:id="@+id/btnEditIngredient"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit"
+            android:textColor="@color/electric_plum"
+            android:backgroundTint="@color/warm_cream" />
+
+        <Button
+            android:id="@+id/btnDeleteIngredient"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Delete"
+            android:textColor="@color/clean_white"
+            android:backgroundTint="@color/vivid_pink" />
+
+    </LinearLayout>
 
 </LinearLayout>

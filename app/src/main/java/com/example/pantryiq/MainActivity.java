@@ -8,21 +8,22 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
     private PantryDatabaseHelper databaseHelper;
-    private List<Ingredient> ingredients;
+    private ArrayList<Ingredient> ingredients;
     private IngredientAdapter ingredientAdapter;
 
     private TextView tvIngredientCount;
@@ -37,21 +38,27 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        // Connect Java variables to the views in activity_main.xml.
+        // Connect Java variables to the layout views.
         tvIngredientCount = findViewById(R.id.tvIngredientCount);
         layoutEmptyPantry = findViewById(R.id.layoutEmptyPantry);
         listPantryIngredients = findViewById(R.id.listPantryIngredients);
         Button btnAddIngredient = findViewById(R.id.btnAddIngredient);
 
-        // Prepare the database and the list that holds pantry ingredients.
+        // Prepare the database and ingredient collection.
         databaseHelper = new PantryDatabaseHelper(this);
         ingredients = new ArrayList<>();
 
-        // Attach the custom adapter to the pantry ListView.
-        ingredientAdapter = new IngredientAdapter(this, ingredients);
+        // Connect the adapter to the list and its action callbacks.
+        ingredientAdapter = new IngredientAdapter(
+                this,
+                ingredients,
+                this::editIngredient,
+                this::confirmDeleteIngredient
+        );
+
         listPantryIngredients.setAdapter(ingredientAdapter);
 
-        // Open the Add Ingredient screen when the button is tapped.
+        // Open the form to add a new ingredient.
         btnAddIngredient.setOnClickListener(view -> {
             Intent intent = new Intent(
                     MainActivity.this,
@@ -60,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Keep the system bars from covering the screen content.
+        // Keep system bars from covering the screen content.
         ViewCompat.setOnApplyWindowInsetsListener(
                 findViewById(R.id.main),
                 (view, windowInsets) -> {
@@ -79,25 +86,90 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
-        // Display the current pantry contents.
         loadIngredients();
+    }
+
+    /**
+     * Opens the ingredient form with the selected ingredient's ID.
+     * AddIngredientActivity must load that record for editing.
+     */
+    private void editIngredient(Ingredient ingredient) {
+        Intent intent = new Intent(
+                MainActivity.this,
+                AddIngredientActivity.class
+        );
+
+        intent.putExtra("ingredient_id", ingredient.getId());
+        startActivity(intent);
+    }
+
+    /**
+     * Requests confirmation before permanently deleting an ingredient.
+     */
+    private void confirmDeleteIngredient(Ingredient ingredient) {
+        new AlertDialog.Builder(this)
+                .setTitle("Delete ingredient")
+                .setMessage(
+                        "Are you sure you want to delete "
+                                + ingredient.getName() + "?"
+                )
+                .setNegativeButton("Cancel", null)
+                .setPositiveButton("Delete", (dialog, which) ->
+                        deleteIngredient(ingredient))
+                .show();
+    }
+
+    /**
+     * Deletes the selected ingredient and refreshes the pantry.
+     */
+    private void deleteIngredient(Ingredient ingredient) {
+        try {
+            int deleted = databaseHelper.deleteIngredient(
+                    ingredient.getId()
+            );
+
+            if (deleted > 0) {
+                Toast.makeText(
+                        this,
+                        "Ingredient deleted",
+                        Toast.LENGTH_SHORT
+                ).show();
+
+                loadIngredients();
+            } else {
+                Toast.makeText(
+                        this,
+                        "Could not delete ingredient",
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+        } catch (Exception exception) {
+            Toast.makeText(
+                    this,
+                    "An error occurred while deleting the ingredient",
+                    Toast.LENGTH_SHORT
+            ).show();
+
+            exception.printStackTrace();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        // Refresh the list when returning from Add Ingredient.
-        // This makes newly saved ingredients appear automatically.
+        // Refresh the pantry when returning from another screen.
         if (databaseHelper != null && ingredients != null) {
             loadIngredients();
         }
     }
 
+    /**
+     * Loads saved ingredients from SQLite and refreshes the interface.
+     */
     private void loadIngredients() {
         ingredients.clear();
 
-        // Read all saved ingredients from SQLite.
         try (Cursor cursor = databaseHelper.getAllIngredients()) {
 
             int idIndex = cursor.getColumnIndexOrThrow(
@@ -126,36 +198,41 @@ public class MainActivity extends AppCompatActivity {
                         ? null
                         : cursor.getString(expiryIndex);
 
-                // Convert each database row into an Ingredient object.
-                Ingredient ingredient = new Ingredient(
+                ingredients.add(new Ingredient(
                         id,
                         name,
                         quantity,
                         unit,
                         expiryDate
-                );
-
-                ingredients.add(ingredient);
+                ));
             }
 
         } catch (Exception exception) {
             exception.printStackTrace();
+
+            Toast.makeText(
+                    this,
+                    "Could not load pantry ingredients",
+                    Toast.LENGTH_SHORT
+            ).show();
         }
 
-        // Tell the adapter to redraw the ingredient list.
+        // Refresh the displayed ingredient rows.
         ingredientAdapter.notifyDataSetChanged();
 
-        // Update the item count.
+        // Update the pantry item count.
         int count = ingredients.size();
+
         String countText = String.format(
                 Locale.getDefault(),
                 "%d %s",
                 count,
                 count == 1 ? "ITEM" : "ITEMS"
         );
+
         tvIngredientCount.setText(countText);
 
-        // Show the empty message only when the pantry has no ingredients.
+        // Toggle between the empty message and ingredient list.
         boolean isEmpty = ingredients.isEmpty();
 
         layoutEmptyPantry.setVisibility(
@@ -171,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        // Release the database helper when this screen is destroyed.
+        // Release the database helper when the activity is destroyed.
         if (databaseHelper != null) {
             databaseHelper.close();
         }

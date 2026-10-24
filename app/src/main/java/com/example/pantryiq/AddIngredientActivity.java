@@ -1,5 +1,6 @@
 package com.example.pantryiq;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,12 +14,17 @@ import java.util.Locale;
 
 public class AddIngredientActivity extends AppCompatActivity {
 
+    private static final String EXTRA_INGREDIENT_ID = "ingredient_id";
+
     private EditText etIngredientName;
     private EditText etQuantity;
     private EditText etUnit;
     private EditText etExpiryDate;
 
     private PantryDatabaseHelper databaseHelper;
+
+    private long ingredientId = -1;
+    private boolean isEditMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +35,17 @@ public class AddIngredientActivity extends AppCompatActivity {
 
         databaseHelper = new PantryDatabaseHelper(this);
 
+        // Check whether the screen was opened to edit an ingredient.
+        ingredientId = getIntent().getLongExtra(
+                EXTRA_INGREDIENT_ID, -1
+        );
+        isEditMode = ingredientId != -1;
+
         setupButtonListeners();
+
+        if (isEditMode) {
+            loadIngredientForEditing();
+        }
     }
 
     // Connect Java variables to the XML views.
@@ -45,12 +61,69 @@ public class AddIngredientActivity extends AppCompatActivity {
         Button btnSaveIngredient = findViewById(R.id.btnSaveIngredient);
         Button btnCancel = findViewById(R.id.btnCancel);
 
+        btnSaveIngredient.setText(
+                isEditMode ? "Update Ingredient" : "Save Ingredient"
+        );
+
         btnSaveIngredient.setOnClickListener(view -> saveIngredient());
 
         btnCancel.setOnClickListener(view -> finish());
     }
 
-    // Validate and save the ingredient.
+    /**
+     * Loads the selected ingredient from SQLite into the form.
+     */
+    private void loadIngredientForEditing() {
+        boolean found = false;
+
+        try (Cursor cursor = databaseHelper.getAllIngredients()) {
+
+            int idIndex = cursor.getColumnIndexOrThrow(
+                    PantryDatabaseHelper.COLUMN_ID
+            );
+            int nameIndex = cursor.getColumnIndexOrThrow(
+                    PantryDatabaseHelper.COLUMN_NAME
+            );
+            int quantityIndex = cursor.getColumnIndexOrThrow(
+                    PantryDatabaseHelper.COLUMN_QUANTITY
+            );
+            int unitIndex = cursor.getColumnIndexOrThrow(
+                    PantryDatabaseHelper.COLUMN_UNIT
+            );
+            int expiryIndex = cursor.getColumnIndexOrThrow(
+                    PantryDatabaseHelper.COLUMN_EXPIRY_DATE
+            );
+
+            while (cursor.moveToNext()) {
+                if (cursor.getLong(idIndex) == ingredientId) {
+                    etIngredientName.setText(cursor.getString(nameIndex));
+                    etQuantity.setText(
+                            String.valueOf(cursor.getDouble(quantityIndex))
+                    );
+                    etUnit.setText(cursor.getString(unitIndex));
+
+                    String expiryDate = cursor.isNull(expiryIndex)
+                            ? ""
+                            : cursor.getString(expiryIndex);
+
+                    etExpiryDate.setText(expiryDate);
+
+                    found = true;
+                    break;
+                }
+            }
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+
+        if (!found) {
+            showMessage("Ingredient not found. Please try again.");
+            finish();
+        }
+    }
+
+    // Validate and save or update the ingredient.
     private void saveIngredient() {
         String name = etIngredientName.getText().toString().trim();
         String quantityText = etQuantity.getText().toString().trim();
@@ -92,27 +165,49 @@ public class AddIngredientActivity extends AppCompatActivity {
         }
 
         if (!expiryDate.isEmpty() && !isValidExpiryDate(expiryDate)) {
-            etExpiryDate.setError("Use a valid date in YYYY-MM-DD format.");
+            etExpiryDate.setError(
+                    "Use a valid date in YYYY-MM-DD format."
+            );
             etExpiryDate.requestFocus();
             return;
         }
 
         try {
-            long result = databaseHelper.addIngredient(
-                    name, quantity, unit,
-                    expiryDate.isEmpty() ? null : expiryDate
-            );
+            long result;
 
-            if (result == -1) {
-                showMessage("Could not save the ingredient. Please try again.");
+            if (isEditMode) {
+                // Update the existing record instead of creating a duplicate.
+                result = databaseHelper.updateIngredient(
+                        ingredientId,
+                        name,
+                        quantity,
+                        unit,
+                        expiryDate.isEmpty() ? null : expiryDate
+                );
+            } else {
+                // Insert a new ingredient.
+                result = databaseHelper.addIngredient(
+                        name,
+                        quantity,
+                        unit,
+                        expiryDate.isEmpty() ? null : expiryDate
+                );
+            }
+
+            if (result <= 0) {
+                showMessage(
+                        isEditMode
+                                ? "Could not update the ingredient. Please try again."
+                                : "Could not save the ingredient. Please try again."
+                );
                 return;
             }
 
-            Toast.makeText(
-                    this,
-                    "Ingredient saved successfully.",
-                    Toast.LENGTH_SHORT
-            ).show();
+            showMessage(
+                    isEditMode
+                            ? "Ingredient updated successfully."
+                            : "Ingredient saved successfully."
+            );
 
             setResult(RESULT_OK);
             finish();
