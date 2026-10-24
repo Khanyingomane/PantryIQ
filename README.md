@@ -79,7 +79,7 @@ The database supports the application's pantry-management functionality and help
 1. Clone this repository:
 
    ```bash
-   git clone <YOUR_GITHUB_REPOSITORY_URL>
+   https://github.com/Khanyingomane/PantryIQ.git
    ```
 
 2. Open Android Studio.
@@ -98,7 +98,7 @@ Project Structure
 
 The application follows a Java-based Android project structure.
 
-```text
+
 PantryIQ/
 ├── app/
 │   └── src/
@@ -145,7 +145,7 @@ Potential improvements include:
 
 ## Author
 
-Developed as an Android application project using Java and Android Studio.
+Developed by Sherine Ngomane as an Android application project using Java and Android Studio.
 
 ## License
 
