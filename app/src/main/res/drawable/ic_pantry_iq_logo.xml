@@ -4,56 +4,48 @@
     android:viewportWidth="64"
     android:viewportHeight="64">
 
-    <!-- Rounded cream badge -->
-    <path
-        android:fillColor="#FFF8F0"
-        android:pathData="M32,2 A30,30 0,1 0,32 62 A30,30 0,1 0,32 2" />
-
-    <!-- Bowl rim -->
+    <!-- Solid purple background -->
     <path
         android:fillColor="#352044"
-        android:pathData="M12,32 L52,32 L48,43 Q46,48 40,48 L24,48 Q18,48 16,43 Z" />
+        android:pathData="M32,2 A30,30 0,1 0,32,62 A30,30 0,1 0,32,2 Z" />
 
-    <!-- Bowl interior -->
+    <!-- Centred pot outline -->
     <path
-        android:fillColor="#FF4F87"
-        android:pathData="M17,35 L47,35 L44,42 Q43,44 39,44 L25,44 Q21,44 20,42 Z" />
+        android:fillColor="#00000000"
+        android:strokeColor="#B8F36B"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M18,29 L46,29 L43,43
+                          Q42,48 37,48 L27,48
+                          Q22,48 21,43 Z" />
 
-    <!-- Bowl base -->
+    <!-- Pot handles -->
     <path
-        android:fillColor="#352044"
-        android:pathData="M25,50 L39,50 L41,53 L23,53 Z" />
+        android:fillColor="#00000000"
+        android:strokeColor="#B8F36B"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M18,32 L13,32 L13,38 L20,38
+                          M46,32 L51,32 L51,38 L44,38" />
 
-    <!-- Whisk handle -->
+    <!-- Slightly open, tilted lid outline -->
     <path
-        android:fillColor="#352044"
-        android:pathData="M19,27 L21,28 L17,36 L15,35 Z" />
+        android:fillColor="#00000000"
+        android:strokeColor="#B8F36B"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M18,24 L39,18 L45,22 L23,28 Z" />
 
-    <!-- Whisk head -->
+    <!-- Lid knob outline -->
     <path
-        android:fillColor="#B8F36B"
-        android:pathData="M15,12 Q10,14 12,20 Q13,24 18,27 L20,25 Q15,22 15,19 Q14,16 17,15 L19,17 Q18,20 21,23 L23,21 Q21,18 23,15 Q20,10 15,12 Z" />
-
-    <!-- Spoon handle -->
-    <path
-        android:fillColor="#352044"
-        android:pathData="M29,25 L32,25 L32,35 L29,35 Z" />
-
-    <!-- Spoon bowl -->
-    <path
-        android:fillColor="#B8F36B"
-        android:pathData="M27,15 Q27,10 30.5,10 Q34,10 34,15 Q34,20 30.5,23 Q27,20 27,15 Z" />
-
-    <!-- Fork handle -->
-    <path
-        android:fillColor="#352044"
-        android:pathData="M42,25 L45,25 L45,35 L42,35 Z" />
-
-    <!-- Fork prongs -->
-    <path
-        android:fillColor="#FF4F87"
-        android:pathData="M40,10 L42,10 L42,18 L43,18 L43,8 L45,8 L45,18 L46,18 L46,10 L48,10 L48,19 Q48,22 45,23 L45,26 L42,26 L42,23 Q39,22 39,19 Z" />
+        android:fillColor="#00000000"
+        android:strokeColor="#B8F36B"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M28,21 L31,17 L34,20" />
 
 </vector>
-
-

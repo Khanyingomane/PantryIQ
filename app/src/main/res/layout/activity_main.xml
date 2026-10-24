@@ -33,7 +33,7 @@
                 <ImageView
                     android:layout_width="54dp"
                     android:layout_height="54dp"
-                    android:contentDescription="Pantry IQ bowl and utensils logo"
+                    android:contentDescription="Pantry IQ cooking pot logo"
                     android:src="@drawable/ic_pantry_iq_logo" />
 
                 <LinearLayout
@@ -58,6 +58,17 @@
                         android:textColor="@color/electric_plum"
                         android:textSize="13sp" />
                 </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/lime_pop"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="7dp"
+                    android:text="SMART"
+                    android:textColor="@color/electric_plum"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <!-- Welcome banner -->
@@ -155,7 +166,7 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
-            <!-- Expandable two-column ingredient grid -->
+            <!-- Existing two-column pantry preview -->
             <com.example.pantryiq.ExpandedGridView
                 android:id="@+id/listPantryIngredients"
                 android:layout_width="match_parent"
@@ -172,12 +183,25 @@
                 android:scrollbars="none"
                 android:visibility="gone" />
 
-            <!-- Primary action -->
+            <!-- Open the full inventory screen -->
+            <Button
+                android:id="@+id/btnOpenPantry"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="22dp"
+                android:backgroundTint="@color/lime_pop"
+                android:text="My Pantry  →"
+                android:textAllCaps="false"
+                android:textColor="@color/electric_plum"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <!-- Add ingredient -->
             <Button
                 android:id="@+id/btnAddIngredient"
                 android:layout_width="match_parent"
-                android:layout_height="58dp"
-                android:layout_marginTop="22dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="10dp"
                 android:backgroundTint="@color/vivid_pink"
                 android:text="@string/add_ingredient"
                 android:textAllCaps="false"
@@ -185,29 +209,41 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <!-- Secondary navigation -->
+            <!-- Discover recipes -->
             <Button
                 android:id="@+id/btnDiscoverRecipes"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_marginTop="10dp"
-                android:backgroundTint="@color/lime_pop"
+                android:backgroundTint="@color/electric_plum"
                 android:text="Discover Recipes"
                 android:textAllCaps="false"
-                android:textColor="@color/electric_plum"
+                android:textColor="@color/clean_white"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
+            <!-- App settings -->
             <Button
                 android:id="@+id/btnOpenSettings"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
-                android:layout_marginTop="8dp"
-                android:backgroundTint="@color/electric_plum"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="@color/warm_cream"
                 android:text="Settings"
                 android:textAllCaps="false"
-                android:textColor="@color/clean_white"
+                android:textColor="@color/electric_plum"
                 android:textSize="15sp" />
+
+            <!-- Footer -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="8dp"
+                android:gravity="center"
+                android:text="Your pantry, your possibility."
+                android:textColor="@color/electric_plum"
+                android:textSize="12sp" />
 
         </LinearLayout>
     </ScrollView>

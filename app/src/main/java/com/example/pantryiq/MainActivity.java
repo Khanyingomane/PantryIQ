@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,7 +16,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,97 +24,89 @@ public class MainActivity extends AppCompatActivity {
     private IngredientAdapter ingredientAdapter;
 
     private TextView tvIngredientCount;
-    private LinearLayout layoutEmptyPantry;
+    private View layoutEmptyPantry;
     private ExpandedGridView listPantryIngredients;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Enable edge-to-edge display and load the dashboard layout.
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        // Connect the layout views.
+        // Find the dashboard views.
         tvIngredientCount = findViewById(R.id.tvIngredientCount);
         layoutEmptyPantry = findViewById(R.id.layoutEmptyPantry);
         listPantryIngredients = findViewById(R.id.listPantryIngredients);
 
+        Button btnOpenPantry = findViewById(R.id.btnOpenPantry);
         Button btnAddIngredient = findViewById(R.id.btnAddIngredient);
         Button btnDiscoverRecipes = findViewById(R.id.btnDiscoverRecipes);
         Button btnOpenSettings = findViewById(R.id.btnOpenSettings);
 
-        // Prepare the database and ingredient collection.
+        // Initialise the database and ingredient list.
         databaseHelper = new PantryDatabaseHelper(this);
         ingredients = new ArrayList<>();
 
-        // Keep the existing edit and delete actions on each ingredient.
+        // Connect the ingredient preview to its adapter.
         ingredientAdapter = new IngredientAdapter(
                 this,
                 ingredients,
                 this::editIngredient,
                 this::confirmDeleteIngredient
         );
-
         listPantryIngredients.setAdapter(ingredientAdapter);
 
-        // Open the form to add an ingredient.
-        btnAddIngredient.setOnClickListener(view -> {
-            Intent intent = new Intent(
-                    MainActivity.this,
-                    AddIngredientActivity.class
-            );
+        // Open the full pantry inventory screen.
+        btnOpenPantry.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, PantryActivity.class);
             startActivity(intent);
         });
 
-        // Open recipe suggestions.
-        btnDiscoverRecipes.setOnClickListener(view -> {
-            Intent intent = new Intent(
-                    MainActivity.this,
-                    RecipeSuggestionsActivity.class
-            );
+        // Open the form for adding an ingredient.
+        btnAddIngredient.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, AddIngredientActivity.class);
+            startActivity(intent);
+        });
+
+        // Open recipe discovery.
+        btnDiscoverRecipes.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, RecipeSuggestionsActivity.class);
             startActivity(intent);
         });
 
         // Open app settings.
-        btnOpenSettings.setOnClickListener(view -> {
-            Intent intent = new Intent(
-                    MainActivity.this,
-                    SettingsActivity.class
-            );
+        btnOpenSettings.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(intent);
         });
 
-        // Keep content clear of the system status and navigation bars.
-        ViewCompat.setOnApplyWindowInsetsListener(
-                findViewById(R.id.main),
-                (view, windowInsets) -> {
-                    Insets systemBars = windowInsets.getInsets(
-                            WindowInsetsCompat.Type.systemBars()
-                    );
+        // Apply system-bar insets so content is not hidden behind system UI.
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (view, windowInsets) -> {
+            Insets systemBars = windowInsets.getInsets(
+                    WindowInsetsCompat.Type.systemBars()
+            );
 
-                    view.setPadding(
-                            systemBars.left,
-                            systemBars.top,
-                            systemBars.right,
-                            systemBars.bottom
-                    );
+            view.setPadding(
+                    systemBars.left,
+                    systemBars.top,
+                    systemBars.right,
+                    systemBars.bottom
+            );
 
-                    return windowInsets;
-                }
-        );
+            return windowInsets;
+        });
 
+        // Load the saved ingredients when the dashboard opens.
         loadIngredients();
     }
 
     /**
-     * Opens the ingredient form for the selected ingredient.
+     * Opens the ingredient form in edit mode for the selected ingredient.
      */
     private void editIngredient(Ingredient ingredient) {
-        Intent intent = new Intent(
-                MainActivity.this,
-                AddIngredientActivity.class
-        );
-
+        Intent intent = new Intent(this, AddIngredientActivity.class);
         intent.putExtra("ingredient_id", ingredient.getId());
         startActivity(intent);
     }
@@ -127,50 +117,96 @@ public class MainActivity extends AppCompatActivity {
     private void confirmDeleteIngredient(Ingredient ingredient) {
         new AlertDialog.Builder(this)
                 .setTitle("Delete ingredient")
-                .setMessage(
-                        "Are you sure you want to delete "
-                                + ingredient.getName() + "?"
-                )
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton(
-                        "Delete",
-                        (dialog, which) -> deleteIngredient(ingredient)
-                )
+                .setMessage("Are you sure you want to delete "
+                        + ingredient.getName() + " from your pantry?")
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    deleteIngredient(ingredient.getId());
+                })
                 .show();
     }
 
     /**
-     * Deletes an ingredient and refreshes the pantry display.
+     * Deletes the selected ingredient and refreshes the dashboard.
      */
-    private void deleteIngredient(Ingredient ingredient) {
-        try {
-            int deleted = databaseHelper.deleteIngredient(
-                    ingredient.getId()
-            );
+    private void deleteIngredient(long ingredientId) {
+        int rowsDeleted = databaseHelper.deleteIngredient(ingredientId);
 
-            if (deleted > 0) {
-                Toast.makeText(
-                        this,
-                        "Ingredient deleted",
-                        Toast.LENGTH_SHORT
-                ).show();
-
-                loadIngredients();
-            } else {
-                Toast.makeText(
-                        this,
-                        "Could not delete ingredient",
-                        Toast.LENGTH_SHORT
-                ).show();
-            }
-        } catch (Exception exception) {
+        if (rowsDeleted > 0) {
             Toast.makeText(
                     this,
-                    "An error occurred while deleting the ingredient",
+                    "Ingredient deleted.",
                     Toast.LENGTH_SHORT
             ).show();
 
-            exception.printStackTrace();
+            loadIngredients();
+        } else {
+            Toast.makeText(
+                    this,
+                    "Could not delete the ingredient.",
+                    Toast.LENGTH_SHORT
+            ).show();
+        }
+    }
+
+    /**
+     * Reads the latest ingredients from SQLite and updates the dashboard.
+     */
+    private void loadIngredients() {
+        ingredients.clear();
+
+        Cursor cursor = databaseHelper.getAllIngredients();
+
+        if (cursor != null) {
+            try {
+                int idColumn = cursor.getColumnIndexOrThrow(
+                        PantryDatabaseHelper.COLUMN_ID
+                );
+                int nameColumn = cursor.getColumnIndexOrThrow(
+                        PantryDatabaseHelper.COLUMN_NAME
+                );
+                int quantityColumn = cursor.getColumnIndexOrThrow(
+                        PantryDatabaseHelper.COLUMN_QUANTITY
+                );
+                int unitColumn = cursor.getColumnIndexOrThrow(
+                        PantryDatabaseHelper.COLUMN_UNIT
+                );
+                int expiryColumn = cursor.getColumnIndexOrThrow(
+                        PantryDatabaseHelper.COLUMN_EXPIRY_DATE
+                );
+
+                while (cursor.moveToNext()) {
+                    Ingredient ingredient = new Ingredient(
+                            cursor.getLong(idColumn),
+                            cursor.getString(nameColumn),
+                            cursor.getDouble(quantityColumn),
+                            cursor.getString(unitColumn),
+                            cursor.getString(expiryColumn)
+                    );
+
+                    ingredients.add(ingredient);
+                }
+            } finally {
+                // Always close the cursor after reading database results.
+                cursor.close();
+            }
+        }
+
+        // Refresh the two-column ingredient preview.
+        ingredientAdapter.notifyDataSetChanged();
+
+        // Update the pantry item count.
+        int count = ingredients.size();
+        String countLabel = count == 1 ? "ITEM" : "ITEMS";
+        tvIngredientCount.setText(String.format("%d %s", count, countLabel));
+
+        // Show the empty state only when there are no saved ingredients.
+        if (count == 0) {
+            layoutEmptyPantry.setVisibility(View.VISIBLE);
+            listPantryIngredients.setVisibility(View.GONE);
+        } else {
+            layoutEmptyPantry.setVisibility(View.GONE);
+            listPantryIngredients.setVisibility(View.VISIBLE);
         }
     }
 
@@ -178,91 +214,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        // Refresh data after returning from another screen.
-        if (databaseHelper != null && ingredients != null) {
+        // Refresh the dashboard when returning from another screen.
+        if (databaseHelper != null && ingredientAdapter != null) {
             loadIngredients();
         }
-    }
-
-    /**
-     * Reads saved ingredients from SQLite and refreshes the grid,
-     * item count, and empty-pantry message.
-     */
-    private void loadIngredients() {
-        ingredients.clear();
-
-        try (Cursor cursor = databaseHelper.getAllIngredients()) {
-
-            int idIndex = cursor.getColumnIndexOrThrow(
-                    PantryDatabaseHelper.COLUMN_ID
-            );
-            int nameIndex = cursor.getColumnIndexOrThrow(
-                    PantryDatabaseHelper.COLUMN_NAME
-            );
-            int quantityIndex = cursor.getColumnIndexOrThrow(
-                    PantryDatabaseHelper.COLUMN_QUANTITY
-            );
-            int unitIndex = cursor.getColumnIndexOrThrow(
-                    PantryDatabaseHelper.COLUMN_UNIT
-            );
-            int expiryIndex = cursor.getColumnIndexOrThrow(
-                    PantryDatabaseHelper.COLUMN_EXPIRY_DATE
-            );
-
-            while (cursor.moveToNext()) {
-                long id = cursor.getLong(idIndex);
-                String name = cursor.getString(nameIndex);
-                double quantity = cursor.getDouble(quantityIndex);
-                String unit = cursor.getString(unitIndex);
-
-                String expiryDate = cursor.isNull(expiryIndex)
-                        ? null
-                        : cursor.getString(expiryIndex);
-
-                ingredients.add(new Ingredient(
-                        id,
-                        name,
-                        quantity,
-                        unit,
-                        expiryDate
-                ));
-            }
-
-        } catch (Exception exception) {
-            exception.printStackTrace();
-
-            Toast.makeText(
-                    this,
-                    "Could not load pantry ingredients",
-                    Toast.LENGTH_SHORT
-            ).show();
-        }
-
-        // Refresh the existing adapter and its expiry information.
-        ingredientAdapter.notifyDataSetChanged();
-
-        // Update the pantry item count.
-        int count = ingredients.size();
-
-        String countText = String.format(
-                Locale.getDefault(),
-                "%d %s",
-                count,
-                count == 1 ? "ITEM" : "ITEMS"
-        );
-
-        tvIngredientCount.setText(countText);
-
-        // Show the empty state only when the pantry has no ingredients.
-        boolean isEmpty = ingredients.isEmpty();
-
-        layoutEmptyPantry.setVisibility(
-                isEmpty ? View.VISIBLE : View.GONE
-        );
-
-        listPantryIngredients.setVisibility(
-                isEmpty ? View.GONE : View.VISIBLE
-        );
     }
 
     @Override
@@ -275,4 +230,3 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 }
-
