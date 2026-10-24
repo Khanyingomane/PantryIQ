@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/recipeSuggestionsRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/warm_cream"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/tvRecipeHeading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Meals You Can Make"
+        android:textColor="@color/electric_plum"
+        android:textSize="26sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvRecipeSubtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="12dp"
+        android:text="Recipes matched to the ingredients in your pantry."
+        android:textColor="@color/electric_plum"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tvRecipeCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:text="0 recipes available"
+        android:textColor="@color/electric_plum"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvEmptyRecipes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:text="No matching recipes yet. Add ingredients or check your pantry quantities to discover meals."
+        android:textColor="@color/electric_plum"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:id="@+id/layoutRecipeSuggestions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btnBackToPantry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Back to Pantry"
+        android:textAllCaps="false" />
+
+</LinearLayout>

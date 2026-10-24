@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/warm_cream"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:id="@+id/layoutRecipeDetail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/tvRecipeDetailName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Recipe Name"
+            android:textColor="@color/electric_plum"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvRecipeDetailDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Recipe description"
+            android:textColor="@color/electric_plum"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tvRecipeDetailTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Total time: 0 minutes"
+            android:textColor="@color/electric_plum"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvRecipeDetailServings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Servings: 0"
+            android:textColor="@color/electric_plum"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Ingredients"
+            android:textColor="@color/electric_plum"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvRecipeDetailIngredients"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@color/clean_white"
+            android:padding="16dp"
+            android:text="Recipe ingredients will appear here."
+            android:textColor="@color/electric_plum"
+            android:textSize="16sp"
+            android:lineSpacingExtra="5dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Cooking Instructions"
+            android:textColor="@color/electric_plum"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvRecipeDetailInstructions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@color/clean_white"
+            android:padding="16dp"
+            android:text="Cooking instructions will appear here."
+            android:textColor="@color/electric_plum"
+            android:textSize="16sp"
+            android:lineSpacingExtra="6dp" />
+
+        <Button
+            android:id="@+id/btnBackToSuggestions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="12dp"
+            android:text="Back to Recipes"
+            android:textAllCaps="false" />
+
+    </LinearLayout>
+
+</ScrollView>
