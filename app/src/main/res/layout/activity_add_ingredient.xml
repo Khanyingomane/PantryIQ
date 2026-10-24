@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:background="@color/warm_cream"
     android:fillViewport="true"
-    android:clipToPadding="false">
+    android:clipToPadding="false"
+    android:scrollbars="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,6 +14,7 @@
         android:orientation="vertical"
         android:padding="24dp">
 
+        <!-- Screen heading -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,126 +30,154 @@
             android:layout_marginTop="8dp"
             android:text="@string/add_ingredient_description"
             android:textColor="@color/electric_plum"
-            android:textSize="16sp" />
+            android:textSize="15sp"
+            android:lineSpacingExtra="3dp" />
 
-        <TextView
+        <!-- Form fields grouped inside a white card -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
-            android:labelFor="@id/etIngredientName"
-            android:text="@string/ingredient_name_label"
-            android:textColor="@color/electric_plum"
-            android:textStyle="bold" />
+            android:layout_marginTop="24dp"
+            android:orientation="vertical"
+            android:padding="18dp"
+            android:background="@drawable/bg_ingredient_card">
 
-        <EditText
-            android:id="@+id/etIngredientName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/ingredient_name_hint"
-            android:inputType="textCapWords"
-            android:minHeight="56dp"
-            android:padding="12dp"
-            android:singleLine="true"
-            android:autofillHints="off"
-            android:textColor="@color/electric_plum"
-            android:textColorHint="@color/electric_plum"
-            android:backgroundTint="@color/electric_plum" />
+            <!-- Ingredient name -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/etIngredientName"
+                android:text="@string/ingredient_name_label"
+                android:textColor="@color/electric_plum"
+                android:textStyle="bold"
+                android:textSize="14sp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:labelFor="@id/etQuantity"
-            android:text="@string/ingredient_quantity_label"
-            android:textColor="@color/electric_plum"
-            android:textStyle="bold" />
+            <EditText
+                android:id="@+id/etIngredientName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:hint="@string/ingredient_name_hint"
+                android:inputType="textCapWords"
+                android:minHeight="54dp"
+                android:padding="12dp"
+                android:singleLine="true"
+                android:autofillHints="off"
+                android:textColor="@color/electric_plum"
+                android:textColorHint="#88778D"
+                android:backgroundTint="@color/electric_plum" />
 
-        <EditText
-            android:id="@+id/etQuantity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/ingredient_quantity_hint"
-            android:inputType="numberDecimal"
-            android:minHeight="56dp"
-            android:padding="12dp"
-            android:singleLine="true"
-            android:textColor="@color/electric_plum"
-            android:textColorHint="@color/electric_plum"
-            android:backgroundTint="@color/electric_plum" />
+            <!-- Quantity -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:labelFor="@id/etQuantity"
+                android:text="@string/ingredient_quantity_label"
+                android:textColor="@color/electric_plum"
+                android:textStyle="bold"
+                android:textSize="14sp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:labelFor="@id/etUnit"
-            android:text="@string/ingredient_unit_label"
-            android:textColor="@color/electric_plum"
-            android:textStyle="bold" />
+            <EditText
+                android:id="@+id/etQuantity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:hint="@string/ingredient_quantity_hint"
+                android:inputType="numberDecimal"
+                android:minHeight="54dp"
+                android:padding="12dp"
+                android:singleLine="true"
+                android:textColor="@color/electric_plum"
+                android:textColorHint="#88778D"
+                android:backgroundTint="@color/electric_plum" />
 
-        <EditText
-            android:id="@+id/etUnit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/ingredient_unit_hint"
-            android:inputType="textCapWords"
-            android:minHeight="56dp"
-            android:padding="12dp"
-            android:singleLine="true"
-            android:textColor="@color/electric_plum"
-            android:textColorHint="@color/electric_plum"
-            android:backgroundTint="@color/electric_plum" />
+            <!-- Unit -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:labelFor="@id/etUnit"
+                android:text="@string/ingredient_unit_label"
+                android:textColor="@color/electric_plum"
+                android:textStyle="bold"
+                android:textSize="14sp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:labelFor="@id/etExpiryDate"
-            android:text="@string/ingredient_expiry_label"
-            android:textColor="@color/electric_plum"
-            android:textStyle="bold" />
+            <EditText
+                android:id="@+id/etUnit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:hint="@string/ingredient_unit_hint"
+                android:inputType="textCapWords"
+                android:minHeight="54dp"
+                android:padding="12dp"
+                android:singleLine="true"
+                android:textColor="@color/electric_plum"
+                android:textColorHint="#88778D"
+                android:backgroundTint="@color/electric_plum" />
 
-        <EditText
-            android:id="@+id/etExpiryDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/ingredient_expiry_hint"
-            android:inputType="date"
-            android:minHeight="56dp"
-            android:padding="12dp"
-            android:singleLine="true"
-            android:textColor="@color/electric_plum"
-            android:textColorHint="@color/electric_plum"
-            android:backgroundTint="@color/electric_plum" />
+            <!-- Expiry date -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:labelFor="@id/etExpiryDate"
+                android:text="@string/ingredient_expiry_label"
+                android:textColor="@color/electric_plum"
+                android:textStyle="bold"
+                android:textSize="14sp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="@string/ingredient_expiry_help"
-            android:textColor="@color/electric_plum"
-            android:textSize="14sp" />
+            <EditText
+                android:id="@+id/etExpiryDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:hint="@string/ingredient_expiry_hint"
+                android:inputType="date"
+                android:minHeight="54dp"
+                android:padding="12dp"
+                android:singleLine="true"
+                android:textColor="@color/electric_plum"
+                android:textColorHint="#88778D"
+                android:backgroundTint="@color/electric_plum" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/ingredient_expiry_help"
+                android:textColor="#76667B"
+                android:textSize="13sp"
+                android:lineSpacingExtra="2dp" />
+
+        </LinearLayout>
+
+        <!-- Primary action -->
         <Button
             android:id="@+id/btnSaveIngredient"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="24dp"
             android:backgroundTint="@color/vivid_pink"
             android:text="@string/save_ingredient"
             android:textColor="@color/clean_white"
+            android:textAllCaps="false"
             android:textSize="16sp"
             android:textStyle="bold" />
 
+        <!-- Secondary action -->
         <Button
             android:id="@+id/btnCancel"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="52dp"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="20dp"
             android:backgroundTint="@color/electric_plum"
             android:text="@string/cancel"
             android:textColor="@color/clean_white"
-            android:textSize="16sp" />
+            android:textAllCaps="false"
+            android:textSize="15sp" />
 
     </LinearLayout>
 

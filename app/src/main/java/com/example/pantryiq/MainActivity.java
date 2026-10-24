@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,33 +27,29 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView tvIngredientCount;
     private LinearLayout layoutEmptyPantry;
-    private ListView listPantryIngredients;
+    private ExpandedGridView listPantryIngredients;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Enable edge-to-edge screen display.
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        // Connect Java variables to the layout views.
+        // Connect the layout views.
         tvIngredientCount = findViewById(R.id.tvIngredientCount);
         layoutEmptyPantry = findViewById(R.id.layoutEmptyPantry);
         listPantryIngredients = findViewById(R.id.listPantryIngredients);
 
-        Button btnAddIngredient =
-                findViewById(R.id.btnAddIngredient);
-        Button btnDiscoverRecipes =
-                findViewById(R.id.btnDiscoverRecipes);
-        Button btnOpenSettings =
-                findViewById(R.id.btnOpenSettings);
+        Button btnAddIngredient = findViewById(R.id.btnAddIngredient);
+        Button btnDiscoverRecipes = findViewById(R.id.btnDiscoverRecipes);
+        Button btnOpenSettings = findViewById(R.id.btnOpenSettings);
 
         // Prepare the database and ingredient collection.
         databaseHelper = new PantryDatabaseHelper(this);
         ingredients = new ArrayList<>();
 
-        // Connect the adapter and its action callbacks.
+        // Keep the existing edit and delete actions on each ingredient.
         ingredientAdapter = new IngredientAdapter(
                 this,
                 ingredients,
@@ -64,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
         listPantryIngredients.setAdapter(ingredientAdapter);
 
-        // Open the form to add a new ingredient.
+        // Open the form to add an ingredient.
         btnAddIngredient.setOnClickListener(view -> {
             Intent intent = new Intent(
                     MainActivity.this,
@@ -73,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Open the recipe suggestions screen.
+        // Open recipe suggestions.
         btnDiscoverRecipes.setOnClickListener(view -> {
             Intent intent = new Intent(
                     MainActivity.this,
@@ -82,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Open the settings screen.
+        // Open app settings.
         btnOpenSettings.setOnClickListener(view -> {
             Intent intent = new Intent(
                     MainActivity.this,
@@ -91,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Keep system bars from covering the screen content.
+        // Keep content clear of the system status and navigation bars.
         ViewCompat.setOnApplyWindowInsetsListener(
                 findViewById(R.id.main),
                 (view, windowInsets) -> {
@@ -114,8 +109,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Opens the ingredient form with the selected ingredient's ID
-     * so the existing record can be edited.
+     * Opens the ingredient form for the selected ingredient.
      */
     private void editIngredient(Ingredient ingredient) {
         Intent intent = new Intent(
@@ -128,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Requests confirmation before deleting an ingredient.
+     * Asks for confirmation before deleting an ingredient.
      */
     private void confirmDeleteIngredient(Ingredient ingredient) {
         new AlertDialog.Builder(this)
@@ -138,13 +132,15 @@ public class MainActivity extends AppCompatActivity {
                                 + ingredient.getName() + "?"
                 )
                 .setNegativeButton("Cancel", null)
-                .setPositiveButton("Delete", (dialog, which) ->
-                        deleteIngredient(ingredient))
+                .setPositiveButton(
+                        "Delete",
+                        (dialog, which) -> deleteIngredient(ingredient)
+                )
                 .show();
     }
 
     /**
-     * Deletes the selected ingredient and refreshes the pantry.
+     * Deletes an ingredient and refreshes the pantry display.
      */
     private void deleteIngredient(Ingredient ingredient) {
         try {
@@ -182,14 +178,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        // Refresh the pantry when returning from another screen.
+        // Refresh data after returning from another screen.
         if (databaseHelper != null && ingredients != null) {
             loadIngredients();
         }
     }
 
     /**
-     * Loads saved ingredients from SQLite and refreshes the interface.
+     * Reads saved ingredients from SQLite and refreshes the grid,
+     * item count, and empty-pantry message.
      */
     private void loadIngredients() {
         ingredients.clear();
@@ -241,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
             ).show();
         }
 
-        // Refresh the displayed ingredient rows.
+        // Refresh the existing adapter and its expiry information.
         ingredientAdapter.notifyDataSetChanged();
 
         // Update the pantry item count.
@@ -256,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
 
         tvIngredientCount.setText(countText);
 
-        // Toggle between the empty message and ingredient list.
+        // Show the empty state only when the pantry has no ingredients.
         boolean isEmpty = ingredients.isEmpty();
 
         layoutEmptyPantry.setVisibility(
@@ -270,7 +267,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        // Release the database helper when the activity is destroyed.
+        // Release the database helper when this activity is destroyed.
         if (databaseHelper != null) {
             databaseHelper.close();
         }

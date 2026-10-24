@@ -11,6 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
+        android:clipToPadding="false"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,32 +21,53 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:padding="20dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/app_name"
-                android:textColor="@color/electric_plum"
-                android:textSize="32sp"
-                android:textStyle="bold"
-                android:accessibilityHeading="true" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/subtitle"
-                android:textColor="@color/electric_plum"
-                android:textSize="15sp" />
-
+            <!-- Brand header -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="54dp"
+                    android:layout_height="54dp"
+                    android:contentDescription="Pantry IQ bowl and utensils logo"
+                    android:src="@drawable/ic_pantry_iq_logo" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pantry IQ"
+                        android:textColor="@color/electric_plum"
+                        android:textSize="27sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/subtitle"
+                        android:textColor="@color/electric_plum"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Welcome banner -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
                 android:background="@color/electric_plum"
                 android:orientation="vertical"
-                android:padding="24dp">
+                android:padding="22dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -59,7 +81,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="10dp"
                     android:text="@string/hero_title"
                     android:textColor="@color/clean_white"
                     android:textSize="25sp"
@@ -71,10 +93,10 @@
                     android:layout_marginTop="8dp"
                     android:text="@string/hero_description"
                     android:textColor="@color/warm_cream"
-                    android:textSize="15sp" />
-
+                    android:textSize="14sp" />
             </LinearLayout>
 
+            <!-- Pantry heading and item count -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -97,14 +119,14 @@
                     android:layout_height="wrap_content"
                     android:background="@color/vivid_pink"
                     android:paddingHorizontal="12dp"
-                    android:paddingVertical="6dp"
+                    android:paddingVertical="7dp"
                     android:text="@string/ingredient_count_zero"
                     android:textColor="@color/clean_white"
                     android:textSize="12sp"
                     android:textStyle="bold" />
-
             </LinearLayout>
 
+            <!-- Empty pantry message -->
             <LinearLayout
                 android:id="@+id/layoutEmptyPantry"
                 android:layout_width="match_parent"
@@ -113,7 +135,7 @@
                 android:background="@color/clean_white"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="28dp">
+                android:padding="26dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -130,51 +152,62 @@
                     android:gravity="center"
                     android:text="@string/empty_pantry"
                     android:textColor="@color/electric_plum"
-                    android:textSize="15sp" />
-
+                    android:textSize="14sp" />
             </LinearLayout>
 
-            <ListView
+            <!-- Expandable two-column ingredient grid -->
+            <com.example.pantryiq.ExpandedGridView
                 android:id="@+id/listPantryIngredients"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:divider="@color/warm_cream"
-                android:dividerHeight="8dp"
+                android:columnWidth="0dp"
+                android:horizontalSpacing="10dp"
+                android:verticalSpacing="10dp"
+                android:numColumns="2"
+                android:stretchMode="columnWidth"
+                android:gravity="center"
+                android:listSelector="@android:color/transparent"
                 android:nestedScrollingEnabled="false"
+                android:scrollbars="none"
                 android:visibility="gone" />
 
+            <!-- Primary action -->
             <Button
                 android:id="@+id/btnAddIngredient"
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="22dp"
                 android:backgroundTint="@color/vivid_pink"
                 android:text="@string/add_ingredient"
+                android:textAllCaps="false"
                 android:textColor="@color/clean_white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
+            <!-- Secondary navigation -->
             <Button
                 android:id="@+id/btnDiscoverRecipes"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_height="52dp"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="@color/lime_pop"
                 android:text="Discover Recipes"
-                android:textAllCaps="false" />
-
+                android:textAllCaps="false"
+                android:textColor="@color/electric_plum"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btnOpenSettings"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="52dp"
                 android:layout_marginTop="8dp"
+                android:backgroundTint="@color/electric_plum"
                 android:text="Settings"
                 android:textAllCaps="false"
-                android:backgroundTint="#352044"
-                android:textColor="#FFFFFF" />
-
-
+                android:textColor="@color/clean_white"
+                android:textSize="15sp" />
 
         </LinearLayout>
     </ScrollView>

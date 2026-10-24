@@ -1,60 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- One row in the pantry ingredient list. -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@color/clean_white">
+    android:padding="12dp"
+    android:background="@drawable/bg_ingredient_card">
 
+    <!-- Ingredient name -->
     <TextView
         android:id="@+id/tvIngredientName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/electric_plum"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textSize="17sp"
+        android:textStyle="bold"
+        android:maxLines="2"
+        android:ellipsize="end" />
 
+    <!-- Quantity and unit -->
     <TextView
         android:id="@+id/tvIngredientQuantity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:textColor="@color/electric_plum"
-        android:textSize="15sp" />
+        android:textSize="14sp"
+        android:maxLines="2"
+        android:ellipsize="end" />
 
+    <!-- Optional expiry status -->
     <TextView
         android:id="@+id/tvIngredientExpiry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textColor="@color/electric_plum"
-        android:textSize="13sp"
+        android:layout_marginTop="6dp"
+        android:textSize="12sp"
+        android:textStyle="bold"
         android:visibility="gone" />
 
-    <!-- Edit and delete controls. -->
+    <!-- Compact side-by-side actions -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal"
-        android:gravity="end"
-        android:layout_marginTop="10dp">
+        android:gravity="center_vertical">
 
         <Button
             android:id="@+id/btnEditIngredient"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:paddingHorizontal="4dp"
             android:text="Edit"
+            android:textAllCaps="false"
+            android:textSize="12sp"
             android:textColor="@color/electric_plum"
-            android:backgroundTint="@color/warm_cream" />
+            android:backgroundTint="@color/lime_pop" />
 
         <Button
             android:id="@+id/btnDeleteIngredient"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_marginStart="6dp"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:paddingHorizontal="4dp"
             android:text="Delete"
+            android:textAllCaps="false"
+            android:textSize="12sp"
             android:textColor="@color/clean_white"
             android:backgroundTint="@color/vivid_pink" />
 

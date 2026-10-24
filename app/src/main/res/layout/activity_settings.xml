@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8F7F2"
-    android:fillViewport="true">
+    android:background="@color/warm_cream"
+    android:fillViewport="true"
+    android:clipToPadding="false"
+    android:scrollbars="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,98 +14,130 @@
         android:orientation="vertical"
         android:padding="24dp">
 
+        <!-- Screen heading -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Settings"
-            android:textColor="#352044"
+            android:textColor="@color/electric_plum"
             android:textSize="30sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:accessibilityHeading="true" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="28dp"
-            android:text="Personalise how you manage your pantry and track ingredient freshness."
-            android:textColor="#59445F"
-            android:textSize="16sp" />
+            android:layout_marginBottom="24dp"
+            android:text="Make Pantry IQ work the way you cook."
+            android:textColor="@color/electric_plum"
+            android:textSize="15sp"
+            android:lineSpacingExtra="3dp" />
 
-        <TextView
+        <!-- Expiry reminder settings card -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="EXPIRY REMINDERS"
-            android:textColor="#352044"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            android:orientation="vertical"
+            android:padding="18dp"
+            android:background="@drawable/bg_ingredient_card">
 
-        <CheckBox
-            android:id="@+id/cbExpiryReminders"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="EXPIRY REMINDERS"
+                android:textColor="@color/electric_plum"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05" />
+
+            <CheckBox
+                android:id="@+id/cbExpiryReminders"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:buttonTint="@color/vivid_pink"
+                android:checked="true"
+                android:minHeight="48dp"
+                android:text="Show expiry reminders"
+                android:textColor="@color/electric_plum"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Highlights expired ingredients and items expiring within seven days. These reminders appear inside the app, not as phone notifications."
+                android:textColor="#76667B"
+                android:textSize="13sp"
+                android:lineSpacingExtra="3dp" />
+
+        </LinearLayout>
+
+        <!-- Measurement preferences card -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:buttonTint="#FF4F87"
-            android:checked="true"
-            android:text="Show expiry reminders"
-            android:textColor="#352044"
-            android:textSize="16sp" />
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            android:padding="18dp"
+            android:background="@drawable/bg_ingredient_card">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="When enabled, the pantry highlights ingredients that have expired or are expiring within seven days. These reminders appear in the app, not as phone notifications."
-            android:textColor="#59445F"
-            android:textSize="13sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="PREFERRED MEASUREMENT UNIT"
+                android:textColor="@color/electric_plum"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
-            android:text="PREFERRED MEASUREMENT UNIT"
-            android:textColor="#352044"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            <Spinner
+                android:id="@+id/spinnerUnitPreference"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="@color/electric_plum"
+                android:entries="@array/unit_preferences"
+                android:padding="8dp" />
 
-        <Spinner
-            android:id="@+id/spinnerUnitPreference"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_marginTop="8dp"
-            android:backgroundTint="#59445F"
-            android:entries="@array/unit_preferences"
-            android:padding="8dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Choose Metric, Kitchen, or Count. Your preference is saved on this device. Existing ingredient quantities are not automatically converted, so recipe matching remains consistent."
+                android:textColor="#76667B"
+                android:textSize="13sp"
+                android:lineSpacingExtra="3dp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Choose the measurement system that suits your cooking: Metric, Kitchen, or Count. Your choice is saved on this device. Existing ingredient quantities are not automatically converted, helping keep recipe matching accurate."
-            android:textColor="#59445F"
-            android:textSize="13sp" />
+        </LinearLayout>
 
+        <!-- Save settings -->
         <Button
             android:id="@+id/btnSaveSettings"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:backgroundTint="#FF4F87"
+            android:layout_height="56dp"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="@color/vivid_pink"
             android:text="Save Settings"
             android:textAllCaps="false"
-            android:textColor="#FFFFFF" />
+            android:textColor="@color/clean_white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
+        <!-- Return to pantry -->
         <Button
             android:id="@+id/btnBackToPantry"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="52dp"
             android:layout_marginTop="8dp"
-            android:backgroundTint="#352044"
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="@color/electric_plum"
             android:text="Back to Pantry"
             android:textAllCaps="false"
-            android:textColor="#FFFFFF" />
+            android:textColor="@color/clean_white"
+            android:textSize="15sp" />
 
     </LinearLayout>
 
 </ScrollView>
-
-
