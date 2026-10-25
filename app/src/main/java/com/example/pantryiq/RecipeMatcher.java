@@ -1,4 +1,7 @@
+
 package com.example.pantryiq;
+
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,20 +12,18 @@ import java.util.Map;
 /**
  * Matches recipes against pantry ingredients.
  *
- * A recipe is suggested only when every required ingredient is
- * available in sufficient quantity and a compatible unit.
+ * A recipe is suggested only when every required ingredient
+ * is available in sufficient quantity and a compatible unit.
  */
 public final class RecipeMatcher {
 
+    private static final String TAG = "PantryRecipeMatcher";
     private static final double EPSILON = 0.000001;
 
     private RecipeMatcher() {
         // Utility class; no instances needed.
     }
 
-    /**
-     * Returns only recipes for which every ingredient requirement is met.
-     */
     public static List<Recipe> findMatchingRecipes(
             List<Recipe> recipes,
             List<Ingredient> pantryIngredients) {
@@ -30,6 +31,7 @@ public final class RecipeMatcher {
         List<Recipe> matches = new ArrayList<>();
 
         if (recipes == null || pantryIngredients == null) {
+            Log.e(TAG, "Recipes or pantry ingredients list is null.");
             return matches;
         }
 
@@ -48,19 +50,34 @@ public final class RecipeMatcher {
 
             pantry.computeIfAbsent(key, unused -> new ArrayList<>())
                     .add(ingredient);
+
+            Log.d(TAG, "PANTRY: " + key
+                    + ", quantity=" + ingredient.getQuantity()
+                    + ", unit=" + ingredient.getUnit());
         }
 
         for (Recipe recipe : recipes) {
-            if (recipe != null && hasAllIngredients(recipe, pantry)) {
+            if (recipe == null) {
+                continue;
+            }
+
+            boolean matchesRecipe = hasAllIngredients(recipe, pantry);
+
+            Log.d(TAG, "RECIPE: " + recipe.getName()
+                    + " | MATCH=" + matchesRecipe);
+
+            if (matchesRecipe) {
                 matches.add(recipe);
             }
         }
+
+        Log.d(TAG, "TOTAL MATCHES: " + matches.size());
 
         return matches;
     }
 
     /**
-     * Checks every required ingredient against the pantry.
+     * Checks every required ingredient and logs the first failure.
      */
     private static boolean hasAllIngredients(
             Recipe recipe,
@@ -68,23 +85,25 @@ public final class RecipeMatcher {
 
         for (Recipe.RecipeIngredient required : recipe.getIngredients()) {
             if (required == null || required.getName() == null) {
+                Log.d(TAG, recipe.getName()
+                        + " rejected: invalid recipe ingredient.");
                 return false;
             }
 
             String key = normalizeName(required.getName());
-            List<Ingredient> availableIngredients = pantry.get(key);
+            List<Ingredient> available = findIngredientEntries(pantry, key);
 
-            if (availableIngredients == null) {
-                availableIngredients = pantry.get(singularize(key));
+            if (available == null) {
+                Log.d(TAG, recipe.getName()
+                        + " rejected: missing ingredient " + key);
+                return false;
             }
 
-            if (availableIngredients == null) {
-                availableIngredients = findPluralMatch(pantry, key);
-            }
-
-            if (availableIngredients == null
-                    || !hasSufficientQuantity(
-                    required, availableIngredients)) {
+            if (!hasSufficientQuantity(required, available)) {
+                Log.d(TAG, recipe.getName()
+                        + " rejected: insufficient quantity or incompatible unit for "
+                        + key + "; required " + required.getQuantity()
+                        + " " + required.getUnit());
                 return false;
             }
         }
@@ -92,10 +111,7 @@ public final class RecipeMatcher {
         return true;
     }
 
-    /**
-     * Finds a pantry entry with a recognised singular/plural equivalent.
-     */
-    private static List<Ingredient> findPluralMatch(
+    private static List<Ingredient> findIngredientEntries(
             Map<String, List<Ingredient>> pantry,
             String requiredName) {
 
@@ -152,7 +168,8 @@ public final class RecipeMatcher {
     }
 
     /**
-     * Checks whether pantry entries provide enough usable quantity.
+     * Sums pantry quantities that can safely be converted
+     * into the recipe's required unit.
      */
     private static boolean hasSufficientQuantity(
             Recipe.RecipeIngredient required,
@@ -188,8 +205,8 @@ public final class RecipeMatcher {
     }
 
     /**
-     * Converts only units that can be compared safely.
-     * Returns null for incompatible or unknown units.
+     * Converts only compatible units.
+     * Count units such as slices, pieces and cans remain distinct.
      */
     private static Double convertQuantity(
             double quantity,
@@ -204,38 +221,25 @@ public final class RecipeMatcher {
         String source = normalizeUnit(sourceUnit);
         String target = normalizeUnit(targetUnit);
 
-        // Identical normalised units are directly comparable.
         if (source.equals(target)) {
             return quantity;
         }
 
-        // Convert between grams and kilograms.
         if (isMassUnit(source) && isMassUnit(target)) {
             return fromGrams(toGrams(quantity, source), target);
         }
 
-        // Convert between millilitres and litres.
         if (isVolumeUnit(source) && isVolumeUnit(target)) {
             return fromMillilitres(
-                    toMillilitres(quantity, source),
-                    target
-            );
+                    toMillilitres(quantity, source), target);
         }
 
-        // Convert between cups, tablespoons and teaspoons.
         if (isKitchenVolumeUnit(source)
                 && isKitchenVolumeUnit(target)) {
             return fromMillilitres(
-                    toMillilitres(quantity, source),
-                    target
-            );
+                    toMillilitres(quantity, source), target);
         }
 
-        /*
-         * Do not convert between different count units.
-         * For example, slices, pieces, eggs and cans are not
-         * automatically interchangeable.
-         */
         return null;
     }
 
@@ -294,9 +298,6 @@ public final class RecipeMatcher {
         }
     }
 
-    /**
-     * Normalises common unit spellings and abbreviations.
-     */
     private static String normalizeUnit(String unit) {
         String normalized = unit.trim().toLowerCase(Locale.ROOT);
 
@@ -304,97 +305,75 @@ public final class RecipeMatcher {
             case "gram":
             case "grams":
                 return "g";
-
             case "kilogram":
             case "kilograms":
                 return "kg";
-
             case "millilitre":
             case "millilitres":
             case "milliliter":
             case "milliliters":
                 return "ml";
-
             case "litre":
             case "litres":
             case "liter":
             case "liters":
                 return "l";
-
             case "piece":
             case "pieces":
             case "pc":
             case "pcs":
             case "each":
                 return "piece";
-
             case "slice":
             case "slices":
                 return "slice";
-
             case "item":
             case "items":
                 return "item";
-
             case "egg":
             case "eggs":
                 return "egg";
-
             case "banana":
             case "bananas":
                 return "banana";
-
             case "tomato":
             case "tomatoes":
                 return "tomato";
-
             case "potato":
             case "potatoes":
                 return "potato";
-
             case "carrot":
             case "carrots":
                 return "carrot";
-
             case "onion":
             case "onions":
                 return "onion";
-
             case "lemon":
             case "lemons":
                 return "lemon";
-
             case "apple":
             case "apples":
                 return "apple";
-
             case "cup":
             case "cups":
                 return "cup";
-
             case "tablespoon":
             case "tablespoons":
             case "tbsp":
             case "tbs":
                 return "tbsp";
-
             case "teaspoon":
             case "teaspoons":
             case "tsp":
                 return "tsp";
-
             default:
                 return normalized;
         }
     }
 
-    /**
-     * Normalises ingredient names without matching partial words.
-     */
     private static String normalizeName(String name) {
         return name.trim()
                 .toLowerCase(Locale.ROOT)
                 .replaceAll("\\s+", " ");
     }
 }
-

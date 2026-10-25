@@ -1,3 +1,4 @@
+
 package com.example.pantryiq;
 
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -28,13 +30,17 @@ public class RecipeSuggestionsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_suggestions);
 
-        layoutRecipeSuggestions = findViewById(R.id.layoutRecipeSuggestions);
+        // Connect the screen components.
+        layoutRecipeSuggestions =
+                findViewById(R.id.layoutRecipeSuggestions);
         tvRecipeCount = findViewById(R.id.tvRecipeCount);
         tvEmptyRecipes = findViewById(R.id.tvEmptyRecipes);
         btnBackToPantry = findViewById(R.id.btnBackToPantry);
 
+        // Initialise the database.
         databaseHelper = new PantryDatabaseHelper(this);
 
+        // Return to the previous screen.
         btnBackToPantry.setOnClickListener(view -> finish());
 
         loadRecipeSuggestions();
@@ -44,33 +50,47 @@ public class RecipeSuggestionsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        // Refresh suggestions whenever the screen becomes active.
         if (databaseHelper != null && layoutRecipeSuggestions != null) {
             loadRecipeSuggestions();
         }
     }
 
     /**
-     * Loads recipes from SQLite and displays only recipes
-     * for which every required ingredient is available.
+     * Loads recipes and displays only those that can be made
+     * with all required pantry ingredients and quantities.
      */
     private void loadRecipeSuggestions() {
         List<Ingredient> pantryIngredients = readPantryIngredients();
 
-        // Recipes are now retrieved from the SQLite database.
+        // Retrieve the recipes stored in SQLite.
         List<Recipe> savedRecipes =
                 databaseHelper.getAllRecipesFromDatabase();
 
-        List<Recipe> matchingRecipes = RecipeMatcher.findMatchingRecipes(
-                savedRecipes,
-                pantryIngredients
-        );
+        // Apply strict ingredient and quantity matching.
+        List<Recipe> matchingRecipes =
+                RecipeMatcher.findMatchingRecipes(
+                        savedRecipes,
+                        pantryIngredients
+                );
 
+        // TEMPORARY diagnostic to identify the source of the problem.
+        Toast.makeText(
+                this,
+                "Saved recipes: " + savedRecipes.size()
+                        + " | Matches: " + matchingRecipes.size(),
+                Toast.LENGTH_LONG
+        ).show();
+
+        // Clear old cards before refreshing the list.
         layoutRecipeSuggestions.removeAllViews();
 
+        // Update the number of available recipes.
         tvRecipeCount.setText(
                 getString(R.string.recipe_count, matchingRecipes.size())
         );
 
+        // Display the empty state when no recipe qualifies.
         if (matchingRecipes.isEmpty()) {
             tvEmptyRecipes.setVisibility(View.VISIBLE);
             layoutRecipeSuggestions.setVisibility(View.GONE);
@@ -86,8 +106,7 @@ public class RecipeSuggestionsActivity extends AppCompatActivity {
     }
 
     /**
-     * Reads pantry ingredients from SQLite and converts each row
-     * into an Ingredient object.
+     * Reads pantry ingredients from SQLite.
      */
     private List<Ingredient> readPantryIngredients() {
         List<Ingredient> ingredients = new ArrayList<>();
@@ -115,19 +134,13 @@ public class RecipeSuggestionsActivity extends AppCompatActivity {
             );
 
             while (cursor.moveToNext()) {
-                long id = cursor.getLong(idColumn);
-                String name = cursor.getString(nameColumn);
-                double quantity = cursor.getDouble(quantityColumn);
-                String unit = cursor.getString(unitColumn);
-                String expiryDate = cursor.getString(expiryColumn);
-
                 ingredients.add(
                         new Ingredient(
-                                id,
-                                name,
-                                quantity,
-                                unit,
-                                expiryDate
+                                cursor.getLong(idColumn),
+                                cursor.getString(nameColumn),
+                                cursor.getDouble(quantityColumn),
+                                cursor.getString(unitColumn),
+                                cursor.getString(expiryColumn)
                         )
                 );
             }
@@ -139,7 +152,7 @@ public class RecipeSuggestionsActivity extends AppCompatActivity {
     }
 
     /**
-     * Creates a recipe card and opens the corresponding detail screen.
+     * Creates a recipe card with its details and navigation button.
      */
     private void addRecipeCard(Recipe recipe) {
         LinearLayout card = new LinearLayout(this);
@@ -156,14 +169,18 @@ public class RecipeSuggestionsActivity extends AppCompatActivity {
         cardParams.setMargins(0, 0, 0, dp(14));
         card.setLayoutParams(cardParams);
 
+        // Recipe name.
         TextView nameView = new TextView(this);
         nameView.setText(recipe.getName());
         nameView.setTextSize(19);
         nameView.setTextColor(getColor(R.color.electric_plum));
-        nameView.setTypeface(null, android.graphics.Typeface.BOLD);
-
+        nameView.setTypeface(
+                null,
+                android.graphics.Typeface.BOLD
+        );
         card.addView(nameView);
 
+        // Short description.
         TextView descriptionView = new TextView(this);
         descriptionView.setText(recipe.getDescription());
         descriptionView.setTextSize(14);
@@ -179,9 +196,9 @@ public class RecipeSuggestionsActivity extends AppCompatActivity {
 
         descriptionParams.setMargins(0, dp(5), 0, dp(8));
         descriptionView.setLayoutParams(descriptionParams);
-
         card.addView(descriptionView);
 
+        // Preparation time and serving information.
         TextView timeView = new TextView(this);
         timeView.setText(
                 String.format(
@@ -195,9 +212,9 @@ public class RecipeSuggestionsActivity extends AppCompatActivity {
         timeView.setTextColor(
                 getColor(android.R.color.darker_gray)
         );
-
         card.addView(timeView);
 
+        // Required ingredients and quantities.
         TextView ingredientsView = new TextView(this);
         ingredientsView.setText(
                 buildIngredientSummary(recipe.getIngredients())
@@ -215,9 +232,9 @@ public class RecipeSuggestionsActivity extends AppCompatActivity {
 
         ingredientsParams.setMargins(0, dp(10), 0, dp(12));
         ingredientsView.setLayoutParams(ingredientsParams);
-
         card.addView(ingredientsView);
 
+        // Open the full recipe instructions.
         Button viewRecipeButton = new Button(this);
         viewRecipeButton.setText("View Recipe");
         viewRecipeButton.setAllCaps(false);
@@ -245,7 +262,7 @@ public class RecipeSuggestionsActivity extends AppCompatActivity {
     }
 
     /**
-     * Formats the required ingredients for a compact recipe preview.
+     * Formats recipe ingredient names, quantities and units.
      */
     private String buildIngredientSummary(
             List<Recipe.RecipeIngredient> ingredients
@@ -271,7 +288,7 @@ public class RecipeSuggestionsActivity extends AppCompatActivity {
     }
 
     /**
-     * Avoids displaying unnecessary decimal zeros in quantities.
+     * Avoids unnecessary decimal zeros in displayed quantities.
      */
     private String formatQuantity(double quantity) {
         if (quantity == Math.floor(quantity)) {
@@ -307,5 +324,3 @@ public class RecipeSuggestionsActivity extends AppCompatActivity {
         super.onDestroy();
     }
 }
-
-
